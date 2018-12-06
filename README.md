@@ -70,6 +70,23 @@ Thư mục .git chứa những thông tin của khó chứa. Chúng ta không c�
 Các tùy chọn còn lại bạn có thể chọn hoặc không. Click vào **Create repository** nếu như thiết lập xong.
 
 ## IV. Branch - Kĩ thuật phân nhánh.
+Một teamwork cùng làm một project với mỗi thành viên làm những chức năng khác nhau. Việc các thành viên phải clone từ reposirory về chỉnh sửa rồi đẩy lên repository gây mất thời gian mà laị khó có thể đồng bộ hóa. Phân nhánh(branch) trong Git giải quyết triệt để bài toán trên.
+
+Khi bắt đầu tạo một repository thì tự động chúng là đang ở nhánh _master_. Đây là branch chính chứa toàn bộ mã nguồn trong repository. Ở nhánh phụ ta có thể thay đổi tùy thích mà không ảnh hưởng đến các nhánh khác.
+
+[Image]
+
+Để tạo một nhánh mới ta làm như sau:
+```sh
+$ git branch ten_nhanh
+```
+
+Để chuyển từ sang một nhánh khác:
+```sh
+$ git checkout ten_nhanh
+```
+
+
 
 
 ## V. Vòng đời trạng thái của tập tin
