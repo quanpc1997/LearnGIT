@@ -69,6 +69,24 @@ Thư mục .git chứa những thông tin của khó chứa. Chúng ta không c�
 
 Các tùy chọn còn lại bạn có thể chọn hoặc không. Click vào **Create repository** nếu như thiết lập xong.
 
+**Gán tên cho remote:**
+```sh
+$ git remote add ten_remote url_repository
+```
+Từ nay trên máy của bạn, bạn có thể dùng tên này thay cho url của repository.
+
+**Kiểm tra tên remote:**
+```sh
+$ git remote -v
+example	https://github.com/skybyte0297/LeanGIT.git (fetch)
+example	https://github.com/skybyte0297/LeanGIT.git (push)
+```
+
+**Đổi tên remote:**
+```sh
+$ git remote rename ten_hien_tai ten_muon_thay_doi
+```
+
 ## IV. Branch - Kĩ thuật phân nhánh.
 Một teamwork cùng làm một project với mỗi thành viên làm những chức năng khác nhau. Việc các thành viên phải clone từ reposirory về chỉnh sửa rồi đẩy lên repository gây mất thời gian mà laị khó có thể đồng bộ hóa. Phân nhánh(branch) trong Git giải quyết triệt để bài toán trên.
 
@@ -76,17 +94,56 @@ Khi bắt đầu tạo một repository thì tự động chúng là đang ở n
 
 [Image]
 
-Để tạo một nhánh mới ta làm như sau:
+#### Tạo mới một Branch
 ```sh
 $ git branch ten_nhanh
 ```
 
-Để chuyển từ sang một nhánh khác:
+#### Chuyển sang một Branch khác
 ```sh
 $ git checkout ten_nhanh
 ```
 
+Bây giờ chúng ta thử tạo mới 1 tập tin docs.txt ở nhánh _master_ rồi sau đó tạo một nhánh mới là _mybranch_ và sửa tập tin mới trên nhánh đó và xem liệu rằng có sự thay đổi nào xảy ra không khi tệp tin trên nhánh _mybranch_ bị thay đổi.
 
+```sh
+$ echo "Nhanh Master" > docs.txt
+$ git add docs.txt
+$ git commit -m "Nhanh Master"
+[master (root-commit) 42d294c] Nhanh Master
+ 1 file changed, 1 insertion(+)
+ create mode 100644 docs.txt
+$ git branch mybranch
+$ git checkout mybranch
+Switched to branch 'mybranch'
+$ git add docs.txt
+$ echo "Nhanh MyBranch" >> docs.txt
+$ git add docs.txt
+$ git commit -m "Nhanh MyBranch"
+[mybranch 7746ff8] Nhanh MyBranch
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+
+Và bạn chuyển về nhánh _master_ để xem kết qủa. Việc chỉnh sửa trên nhánh phụ không ảnh hưởng gì đến nhánh chính
+
+### Gộp nhánh
+Trở lại bài toán teamwork lúc đầu, sau khi mọi người hoàn thành nhiệm vụ của mình. Giờ là lúc đồng bộ hóa code. Bằng cách gộp nhánh, code từ các nhánh sẽ được hợp lại ở nhánh master.
+
+Đầu tiên bạn cần trở về nhánh _master_:
+```sh
+$ git checkout master 
+```
+Tiếp theo gộp nhánh vào nhánh _master_(ở đây là nhánh mybranch):
+```sh
+$ git merge mybranch
+```
+Bạn kiểm tra lại thì nội dung của file docs.txt đã bị thay đổi theo đúng nhánh mybranch.
+
+#### Xóa một Branch
+```sh
+$ git branch -d ten_nhanh
+```
+**Lưu ý**: Để xóa được một nhánh thì chúng ta cần gộp với nhánh khác trước sau đó mới xóa được. 
 
 
 ## V. Vòng đời trạng thái của tập tin
@@ -126,7 +183,7 @@ Kết quả hiển thị như trên chính tỏ file đã chuyển sang trạng 
 
 **Lưu ý**: với file lần đầu tiên đăng kí với Git thì đồng nghĩa với việc nó được chuyển thẳng về trạng thái **Staged**.
 
-## VI. Một số hoạt động trên Git thường sử dụng.
+## VI. Một số hoạt động thường sử dụng.
 
 ### 1. Commit
 - Commit được hiểu đơn giản là một hành động lưu lại một bản chụp(snapshot) của một sự thay đổi nào đó trong tập tin được đăng kí với Git.
@@ -249,5 +306,39 @@ Sử dụng **_git tag -d ten_Tag_**:
 ```sh
 $ git tag -d V1
 ```
+### 4. Clone
+Khi muốn chép toàn bộ dữ liệu từ nhánh master trên repository về máy của bạn:
+```sh
+$ git clone url_repository/ten_da_gan_cho_repository
+```
+Lệnh này tự động tạo một nhánh master trên _local repository_ của bạn.
+
+**Để clone một nhánh không phải _master_ ta làm như sau:**
+```sh
+$ git clone --single-branch -b ten_branch url_repository/ten_da_gan_cho_repository
+```
+Ví dụ ở đây tôi muốn clone nhánh mygit tử repository của tôi:
+```sh
+$ git clone --single-branch -b mygit https://github.com/skybyte0297/LeanGIT.git
+Cloning into 'LeanGIT'...
+remote: Enumerating objects: 7, done.
+remote: Counting objects: 100% (7/7), done.
+remote: Compressing objects: 100% (7/7), done.
+remote: Total 7 (delta 0), reused 7 (delta 0), pack-reused 0
+Unpacking objects: 100% (7/7), done.
+```
+
+### 5. Pull
+Muốn update một phiên bản mới gộp vào nhánh bạn đang làm việc mà không phải tản lại hẳn cả phiên bản mới về, ta gùng lệnh _git pull_
+```sh
+$ git pull url_repository/ten_da_gan_cho_repository
+```
+
+### 6. Push
+Muốn đẩy một tệp/thư mục từ local repository lên github thì ta dùng lệnh _git push_
+```sh
+$ git push url_repository/ten_da_gan_cho_repository ten_branch_muon_push
+```
+
 
 To be continue ...!
